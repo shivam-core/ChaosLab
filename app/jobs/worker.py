@@ -42,45 +42,51 @@ def claim_job(session) -> Job | None:
     session.rollback()
     return None
 
-def process_job(job: Job):
-    print(f"Processing job {job.id} of kind {job.kind} for resource {job.resource_id}")
+def process_job(job_id: int, job_kind: str, resource_id: str):
+    print(f"Processing job {job_id} of kind {job_kind} for resource {resource_id}")
     
     with SessionLocal() as session:
         try:
-            if job.kind == "run":
-                process_run_job(session, job.resource_id)
+            if job_kind == "run":
+                process_run_job(session, resource_id)
                     
-            elif job.kind == "parse":
-                process_parse_job(session, job.resource_id)
+            elif job_kind == "parse":
+                process_parse_job(session, resource_id)
                     
-            elif job.kind == "pdf":
-                process_pdf_job(session, job.resource_id)
+            elif job_kind == "pdf":
+                process_pdf_job(session, resource_id)
                     
             # Mark job complete
-            db_job = session.query(Job).filter(Job.id == job.id).first()
+            db_job = session.query(Job).filter(Job.id == job_id).first()
             if db_job:
                 db_job.status = "succeeded"
             
             session.commit()
-            print(f"Successfully processed job {job.id}")
+            print(f"Successfully processed job {job_id}")
             
         except Exception as e:
             session.rollback()
-            db_job = session.query(Job).filter(Job.id == job.id).first()
+            db_job = session.query(Job).filter(Job.id == job_id).first()
             if db_job:
                 db_job.status = "failed"
                 db_job.safe_error = str(e)
                 session.commit()
-            print(f"Failed job {job.id}: {e}")
+            print(f"Failed job {job_id}: {e}")
 
 def main():
     print("Starting background worker loop...")
     while True:
         with SessionLocal() as session:
             job = claim_job(session)
-            
-        if job:
-            process_job(job)
+            if job:
+                job_id = job.id
+                job_kind = job.kind
+                resource_id = job.resource_id
+            else:
+                job_id = None
+                
+        if job_id:
+            process_job(job_id, job_kind, resource_id)
         else:
             time.sleep(2)
 
