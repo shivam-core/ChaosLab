@@ -50,3 +50,17 @@ export const getRun = async (runId: string) => {
   const res = await api.get(`/runs/${runId}`);
   return res.data;
 };
+
+export const downloadReport = async (runId: string) => {
+  const res = await api.get(`/runs/${runId}/report/download`, {
+    responseType: 'blob'
+  });
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `report_${runId}.pdf`);
+  document.body.appendChild(link);
+  link.click();
+  link.parentNode?.removeChild(link);
+};
+

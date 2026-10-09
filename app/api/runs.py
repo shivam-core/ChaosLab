@@ -76,3 +76,63 @@ def get_run(
         summary=run.summary,
         completed_at=run.completed_at
     )
+
+from fastapi.responses import Response
+import io
+from reportlab.pdfgen import canvas
+
+@router.get("/{run_id}/report/download")
+def download_run_report(
+    run_id: str,
+    workspace_id: str = Depends(get_workspace_id),
+    db: Session = Depends(get_db)
+):
+    run = db.query(Run).filter(
+        Run.id == run_id,
+        Run.workspace_id == workspace_id
+    ).first()
+    
+    if not run:
+        raise HTTPException(status_code=404, detail="Run not found")
+        
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, 800, "ChaosLab Retail Simulation Report")
+    
+    p.setFont("Helvetica", 12)
+    p.drawString(100, 770, f"Run ID: {run.id}")
+    p.drawString(100, 750, f"Status: {run.status}")
+    if run.completed_at:
+        p.drawString(100, 730, f"Completed At: {run.completed_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        
+    y = 690
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, y, "Simulation Results Summary:")
+    y -= 25
+    p.setFont("Helvetica", 12)
+    
+    if run.summary:
+        for k, v in run.summary.items():
+            if isinstance(v, float):
+                v_str = f"{v:.2f}"
+            else:
+                v_str = str(v)
+            p.drawString(120, y, f"{k.replace('_', ' ').title()}: {v_str}")
+            y -= 20
+    else:
+        p.drawString(120, y, "No results summary available yet.")
+        
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    pdf_bytes = buffer.getvalue()
+    buffer.close()
+    
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=report_{run_id}.pdf"}
+    )

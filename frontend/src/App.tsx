@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { initializeWorkspace, uploadDataset, listDatasets, createScenario, startRun, getRun } from './api';
+import { initializeWorkspace, uploadDataset, listDatasets, createScenario, startRun, getRun, downloadReport } from './api';
 import { UploadCloud, Play, FileText, CheckCircle, Clock } from 'lucide-react';
 
 
@@ -18,7 +18,7 @@ function App() {
   });
   
   const [running, setRunning] = useState(false);
-  const [, setActiveRunId] = useState<string | null>(null);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [runData, setRunData] = useState<any>(null);
 
   useEffect(() => {
@@ -109,6 +109,12 @@ function App() {
           <p className="text-sm text-textMuted">Supply Chain Stress Testing</p>
         </div>
         <div className="flex items-center gap-4">
+          {datasets.length > 0 && (
+            <label className={`cursor-pointer text-sm font-medium text-primary hover:underline ${uploading ? 'opacity-50' : ''}`}>
+              {uploading ? 'Uploading...' : 'Upload Another File'}
+              <input type="file" className="hidden" accept=".csv,.xlsx" onChange={handleFileUpload} disabled={uploading} />
+            </label>
+          )}
           <span className="text-xs bg-secondary px-3 py-1 rounded-full text-textMuted font-medium">
             Workspace Active
           </span>
@@ -236,7 +242,10 @@ function App() {
                       <FileText className="w-12 h-12 text-primary mx-auto mb-4 opacity-75" />
                       <h4 className="font-bold mb-2">Simulation Succeeded</h4>
                       <p className="text-sm text-textMuted mb-4">The detailed timeline and charts would be rendered here.</p>
-                      <button className="text-primary font-medium text-sm hover:underline flex items-center gap-2 mx-auto">
+                      <button 
+                        className="text-primary font-medium text-sm hover:underline flex items-center gap-2 mx-auto"
+                        onClick={() => activeRunId && downloadReport(activeRunId)}
+                      >
                         <FileText className="w-4 h-4" /> Download PDF Report
                       </button>
                     </div>
