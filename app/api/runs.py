@@ -74,6 +74,7 @@ def get_run(
         scenario_id=run.scenario_id,
         status=run.status,
         summary=run.summary,
+        results=run.results,
         completed_at=run.completed_at
     )
 
