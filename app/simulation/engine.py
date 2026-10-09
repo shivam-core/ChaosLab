@@ -148,11 +148,36 @@ def run_simulation(config: EngineConfig, frozen_demand: List[DemandLine], produc
     fulfilled_units = sum(s.shipped_qty for s in shipments)
     fill_rate = (fulfilled_units / demanded_units * 100) if demanded_units else None
     
+    total_revenue = sum(s.shipped_qty * s.unit_price_minor for s in shipments) / 100.0
+    total_cost = 0 # Not modelled in basic retail config but needed by UI
+    net_profit = total_revenue - total_cost
+    
+    peak_inventory = 0
+    stockout_days = 0
+    for snap in snapshots:
+        total_inv = sum(snap['stock'].values())
+        if total_inv > peak_inventory:
+            peak_inventory = total_inv
+        
+        # Calculate backlogs for this day
+        has_stockout = False
+        for cause_dict in snap['blocking_causes'].values():
+            if cause_dict.get('stock_blocked', 0) > 0:
+                has_stockout = True
+                break
+        if has_stockout:
+            stockout_days += 1
+    
     metrics = {
         "demanded_units": demanded_units,
         "fulfilled_units": fulfilled_units,
         "ending_backlog": demanded_units - fulfilled_units,
         "fill_rate": fill_rate,
+        "total_revenue": total_revenue,
+        "total_cost": total_cost,
+        "net_profit": net_profit,
+        "peak_inventory": peak_inventory,
+        "stockout_days": stockout_days
     }
 
     return EngineResult(
