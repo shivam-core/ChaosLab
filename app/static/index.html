@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosLab</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div>
+                <h2>ChaosLab</h2>
+                <div id="lab-id-display" class="text-muted text-small mb-4"></div>
+            </div>
+            <nav class="flex gap-2 mt-4" style="flex-direction: column;">
+                <button id="btn-new-lab">New Lab</button>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="flex justify-between items-center mb-4">
+                <div>
+                    <h1>See how a pipeline recovers</h1>
+                    <p class="text-muted">Generate synthetic orders, interrupt processing, and observe recovery.</p>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <div id="connection-status" class="badge">Connecting...</div>
+                    <button id="btn-report" class="primary" disabled>Download Report</button>
+                </div>
+            </header>
+
+            <div id="create-lab-overlay" class="panel flex items-center justify-between">
+                <div>
+                    <h2>Welcome to ChaosLab</h2>
+                    <p>Create a new lab to begin experimenting.</p>
+                </div>
+                <button id="btn-create-lab" class="primary">Create lab</button>
+            </div>
+
+            <div id="dashboard" style="display: none;">
+                <div class="panel flex gap-4 items-center">
+                    <button id="btn-start-gen" class="primary">Start generating</button>
+                    <button id="btn-stop-gen">Stop generating</button>
+                    <button id="btn-pause">Pause worker</button>
+                    <button id="btn-restore">Restore normal operation</button>
+                </div>
+                
+                <div class="grid-cols-5 mb-4">
+                    <div class="panel">
+                        <div class="text-muted text-small">Queued</div>
+                        <div id="metric-queued" class="metric">0</div>
+                    </div>
+                    <div class="panel">
+                        <div class="text-muted text-small">Processing</div>
+                        <div id="metric-processing" class="metric">0</div>
+                    </div>
+                    <div class="panel">
+                        <div class="text-muted text-small">Waiting to retry</div>
+                        <div id="metric-retry" class="metric">0</div>
+                    </div>
+                    <div class="panel">
+                        <div class="text-muted text-small">Succeeded</div>
+                        <div id="metric-succeeded" class="metric">0</div>
+                    </div>
+                    <div class="panel">
+                        <div class="text-muted text-small">Failed</div>
+                        <div id="metric-failed" class="metric">0</div>
+                    </div>
+                </div>
+
+                <div class="grid-cols-2 mb-4">
+                    <div class="panel">
+                        <h2>Experiments</h2>
+                        <div class="flex justify-between items-center mb-4 pb-4" style="border-bottom: 1px solid var(--border)">
+                            <div>
+                                <strong>Inject 5 malformed orders</strong>
+                                <p class="text-muted text-small">Adds negative-quantity orders that should be rejected immediately.</p>
+                            </div>
+                            <button id="btn-inject">Inject</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <strong>Enable temporary errors</strong>
+                                <p class="text-muted text-small">Every third valid order fails its first two attempts.</p>
+                            </div>
+                            <button id="btn-temp-errors">Enable</button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h2>Queue Depth</h2>
+                        <div class="chart-container" id="queue-chart">
+                            <!-- SVG generated in JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-cols-2">
+                    <div class="panel">
+                        <h2>Recent Orders</h2>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Category</th>
+                                        <th>State</th>
+                                        <th>Attempts</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h2>Event Timeline</h2>
+                        <div class="event-timeline" id="event-timeline">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="/static/app.js"></script>
+</body>
+</html>
