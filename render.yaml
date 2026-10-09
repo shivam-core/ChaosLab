@@ -2,20 +2,10 @@ services:
   - type: web
     name: chaoslab-web
     env: docker
+    plan: free
     dockerfilePath: ./Dockerfile
     preDeployCommand: "alembic upgrade head"
-    dockerCommand: "python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: chaoslab-db
-          property: connectionString
-
-  - type: worker
-    name: chaoslab-worker
-    env: docker
-    dockerfilePath: ./Dockerfile
-    dockerCommand: "python -m app.jobs.worker"
+    dockerCommand: "bash -c 'python -m app.jobs.worker & python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT'"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
