@@ -29,7 +29,8 @@ def start_run(
     run = Run(
         workspace_id=workspace_id,
         scenario_id=req.scenario_id,
-        status="queued"
+        status="queued",
+        engine_version="1.0"
     )
     
     db.add(run)
