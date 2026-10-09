@@ -21,7 +21,8 @@ def process_run_job(session: Session, run_id: str):
     demand = []
     products = set()
     for t in transactions:
-        arrival_day = (t.transaction_date.date() - dataset.coverage_start).days + 1
+        coverage_start_date = dataset.coverage_start.date() if isinstance(dataset.coverage_start, datetime) else dataset.coverage_start
+        arrival_day = (t.transaction_date.date() - coverage_start_date).days + 1
         demand.append(DemandLine(
             id=t.id,
             product_id=t.product_id,
