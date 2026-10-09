@@ -34,10 +34,31 @@ def process_run_job(session: Session, run_id: str):
         ))
         products.add(t.product_id)
         
-    config = EngineConfig(**scenario.config_json)
+    ui_config = scenario.config_json or {}
+    products_list = list(products)
     
-    config_products = set(config.starting_stock.keys()) | set(config.reorder_point.keys())
-    all_products = list(products | config_products)
+    starting_inv = ui_config.get("starting_inventory", 100)
+    lead_time_days = ui_config.get("lead_time_days", 7)
+    
+    horizon = 30
+    if dataset.coverage_end and dataset.coverage_start:
+        c_end = dataset.coverage_end.date() if isinstance(dataset.coverage_end, datetime) else dataset.coverage_end
+        c_start = dataset.coverage_start.date() if isinstance(dataset.coverage_start, datetime) else dataset.coverage_start
+        horizon = (c_end - c_start).days + 1
+        
+    config = EngineConfig(
+        horizon=horizon,
+        capacity=10000,
+        starting_stock={p: starting_inv for p in products_list},
+        reorder_point={p: starting_inv for p in products_list},
+        reorder_qty={p: starting_inv for p in products_list},
+        lead_time={p: lead_time_days for p in products_list},
+        opening_deliveries=[],
+        capacity_reductions={},
+        supplier_delays={}
+    )
+    
+    all_products = products_list
     
     result = run_simulation(config, demand, all_products)
     

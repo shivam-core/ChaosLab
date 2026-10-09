@@ -155,18 +155,14 @@ def run_simulation(config: EngineConfig, frozen_demand: List[DemandLine], produc
     peak_inventory = 0
     stockout_days = 0
     for snap in snapshots:
-        total_inv = sum(snap['stock'].values())
+        total_inv = sum(snap['inventory'].values())
         if total_inv > peak_inventory:
             peak_inventory = total_inv
         
         # Calculate backlogs for this day
-        has_stockout = False
-        for cause_dict in snap['blocking_causes'].values():
-            if cause_dict.get('stock_blocked', 0) > 0:
-                has_stockout = True
-                break
-        if has_stockout:
+        if len(snap['stock_blocked_products']) > 0:
             stockout_days += 1
+
     
     metrics = {
         "demanded_units": demanded_units,

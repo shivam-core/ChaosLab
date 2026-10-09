@@ -70,6 +70,12 @@ def process_job(job_id: int, job_kind: str, resource_id: str):
             if db_job:
                 db_job.status = "failed"
                 db_job.safe_error = str(e)
+                # Mark associated resource as failed too to unblock UI
+                if db_job.kind == "run":
+                    run = session.query(Run).filter(Run.id == db_job.resource_id).first()
+                    if run:
+                        run.status = "failed"
+                
                 session.commit()
             print(f"Failed job {job_id}: {e}")
 
