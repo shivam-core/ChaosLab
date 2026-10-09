@@ -110,6 +110,7 @@ class Run(Base):
     engine_version: Mapped[str] = mapped_column(String)
     status: Mapped[str] = mapped_column(String, default="queued")
     summary: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    results: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 

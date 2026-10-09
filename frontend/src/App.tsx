@@ -155,22 +155,22 @@ function App() {
   if (loading) return <div className="flex h-screen items-center justify-center text-textMuted">Initializing ChaosLab...</div>;
 
   return (
-    <div className="flex h-screen bg-[#F8F9FA] text-[#1A1A1A] font-sans overflow-hidden">
+    <div className="flex h-screen bg-background text-textMain font-sans overflow-hidden">
       
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-[#E5E7EB] flex flex-col">
-        <div className="p-6 border-b border-[#E5E7EB]">
-          <h1 className="text-xl font-serif font-bold text-[#111827]">ChaosLab Retail</h1>
-          <p className="text-xs text-[#6B7280] mt-1 tracking-wide uppercase font-semibold">Simulation Engine v2.0</p>
+      <aside className="w-64 bg-surface border-r border-secondary flex flex-col">
+        <div className="p-6 border-b border-secondary">
+          <h1 className="text-xl font-serif font-bold text-textMain">ChaosLab Retail</h1>
+          <p className="text-xs text-textMuted mt-1 tracking-wide uppercase font-semibold">Simulation Engine v2.0</p>
         </div>
         
         <div className="p-6 flex-1 overflow-y-auto">
-          <h2 className="text-xs font-bold text-[#6B7280] uppercase tracking-wider mb-4">Input Data</h2>
+          <h2 className="text-xs font-bold text-textMuted uppercase tracking-wider mb-4">Input Data</h2>
           
           {!datasets.length ? (
-            <label className={`flex flex-col items-center justify-center p-6 border-2 border-dashed border-[#D1D5DB] rounded-lg cursor-pointer hover:bg-[#F3F4F6] transition-colors ${uploading ? 'opacity-50' : ''}`}>
-              <UploadCloud className="w-8 h-8 text-[#9CA3AF] mb-2" />
-              <span className="text-sm font-medium text-[#4B5563]">{uploading ? 'Uploading...' : 'Upload CSV / XLSX'}</span>
+            <label className={`flex flex-col items-center justify-center p-6 border-2 border-dashed border-secondary rounded-lg cursor-pointer hover:bg-secondary transition-colors ${uploading ? 'opacity-50' : ''}`}>
+              <UploadCloud className="w-8 h-8 text-textMuted mb-2" />
+              <span className="text-sm font-medium text-textMain">{uploading ? 'Uploading...' : 'Upload CSV / XLSX'}</span>
               <input type="file" className="hidden" accept=".csv,.xlsx" onChange={handleFileUpload} disabled={uploading} />
             </label>
           ) : (
@@ -179,7 +179,7 @@ function App() {
                 <FileText className="w-5 h-5 flex-shrink-0" />
                 <div className="text-sm font-medium truncate" title={datasets[0].name}>{datasets[0].name}</div>
               </div>
-              <label className={`text-xs font-medium text-[#2563EB] hover:underline cursor-pointer flex items-center gap-1 ${uploading ? 'opacity-50' : ''}`}>
+              <label className={`text-xs font-medium text-primary hover:underline cursor-pointer flex items-center gap-1 ${uploading ? 'opacity-50' : ''}`}>
                 <UploadCloud className="w-3 h-3" /> {uploading ? 'Replacing...' : 'Replace Dataset'}
                 <input type="file" className="hidden" accept=".csv,.xlsx" onChange={handleFileUpload} disabled={uploading} />
               </label>
@@ -187,38 +187,38 @@ function App() {
           )}
 
           <div className="mt-8">
-            <h2 className="text-xs font-bold text-[#6B7280] uppercase tracking-wider mb-4">Scenario Parameters</h2>
+            <h2 className="text-xs font-bold text-textMuted uppercase tracking-wider mb-4">Scenario Parameters</h2>
             <div className="space-y-5">
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <label className="font-medium text-[#4B5563]">Supplier Reliability</label>
-                  <span className="text-[#6B7280]">{(scenarioConfig.supplier_reliability * 100).toFixed(0)}%</span>
+                  <label className="font-medium text-textMain">Supplier Reliability</label>
+                  <span className="text-textMuted">{(scenarioConfig.supplier_reliability * 100).toFixed(0)}%</span>
                 </div>
-                <input type="range" min="0" max="1" step="0.01" className="w-full accent-[#2563EB]"
+                <input type="range" min="0" max="1" step="0.01" className="w-full accent-primary"
                   value={scenarioConfig.supplier_reliability}
                   onChange={e => setScenarioConfig({...scenarioConfig, supplier_reliability: parseFloat(e.target.value)})} />
               </div>
               
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <label className="font-medium text-[#4B5563]">Demand Volatility</label>
-                  <span className="text-[#6B7280]">{(scenarioConfig.demand_volatility * 100).toFixed(0)}%</span>
+                  <label className="font-medium text-textMain">Demand Volatility</label>
+                  <span className="text-textMuted">{(scenarioConfig.demand_volatility * 100).toFixed(0)}%</span>
                 </div>
-                <input type="range" min="0" max="1" step="0.01" className="w-full accent-[#2563EB]"
+                <input type="range" min="0" max="1" step="0.01" className="w-full accent-primary"
                   value={scenarioConfig.demand_volatility}
                   onChange={e => setScenarioConfig({...scenarioConfig, demand_volatility: parseFloat(e.target.value)})} />
               </div>
 
               <div>
-                <label className="font-medium text-xs text-[#4B5563] mb-1 block">Lead Time (Days)</label>
-                <input type="number" min="1" max="30" className="w-full text-sm bg-white border border-[#D1D5DB] rounded px-3 py-2 outline-none focus:border-[#2563EB]"
+                <label className="font-medium text-xs text-textMain mb-1 block">Lead Time (Days)</label>
+                <input type="number" min="1" max="30" className="w-full text-sm bg-surface border border-secondary rounded px-3 py-2 outline-none focus:border-[#2563EB]"
                   value={scenarioConfig.lead_time_days}
                   onChange={e => setScenarioConfig({...scenarioConfig, lead_time_days: parseInt(e.target.value)})} />
               </div>
 
               <div>
-                <label className="font-medium text-xs text-[#4B5563] mb-1 block">Starting Inventory</label>
-                <input type="number" min="0" step="100" className="w-full text-sm bg-white border border-[#D1D5DB] rounded px-3 py-2 outline-none focus:border-[#2563EB]"
+                <label className="font-medium text-xs text-textMain mb-1 block">Starting Inventory</label>
+                <input type="number" min="0" step="100" className="w-full text-sm bg-surface border border-secondary rounded px-3 py-2 outline-none focus:border-[#2563EB]"
                   value={scenarioConfig.starting_inventory}
                   onChange={e => setScenarioConfig({...scenarioConfig, starting_inventory: parseInt(e.target.value)})} />
               </div>
@@ -226,9 +226,9 @@ function App() {
           </div>
         </div>
 
-        <div className="p-4 border-t border-[#E5E7EB]">
+        <div className="p-4 border-t border-secondary">
           <button 
-            className={`w-full flex items-center justify-center gap-2 bg-[#111827] text-white py-3 rounded-lg font-medium text-sm hover:bg-[#1F2937] transition-colors shadow-sm ${(!activeDatasetId || running) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-colors shadow-sm ${(!activeDatasetId || running) ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleRunSimulation}
             disabled={!activeDatasetId || running}
           >
@@ -239,28 +239,28 @@ function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto bg-[#F8F9FA]">
+      <main className="flex-1 overflow-y-auto bg-background">
         {/* Header */}
-        <header className="bg-white border-b border-[#E5E7EB] px-8 py-5 flex justify-between items-center sticky top-0 z-10">
+        <header className="bg-surface border-b border-secondary px-8 py-5 flex justify-between items-center sticky top-0 z-10">
           <div>
-            <h2 className="text-2xl font-serif text-[#111827]">Retail Supply Chain Dashboard</h2>
-            <p className="text-sm text-[#6B7280] mt-1">Live simulation telemetry and post-run PDF reports</p>
+            <h2 className="text-2xl font-serif text-textMain">Retail Supply Chain Dashboard</h2>
+            <p className="text-sm text-textMuted mt-1">Live simulation telemetry and post-run PDF reports</p>
           </div>
           {runData?.status === 'succeeded' && (
             <button 
-              className="flex items-center gap-2 bg-white border border-[#D1D5DB] text-[#374151] px-4 py-2 rounded-lg font-medium text-sm hover:bg-[#F9FAFB] shadow-sm transition-colors"
+              className="flex items-center gap-2 bg-surface border border-secondary text-textMain px-4 py-2 rounded-lg font-medium text-sm hover:bg-surface shadow-sm transition-colors"
               onClick={() => activeRunId && downloadReport(activeRunId)}
             >
-              <FileText className="w-4 h-4 text-[#2563EB]" /> Export PDF Report
+              <FileText className="w-4 h-4 text-primary" /> Export PDF Report
             </button>
           )}
         </header>
 
         <div className="p-8 max-w-7xl mx-auto space-y-6">
           {(!runData && !running) ? (
-            <div className="flex flex-col items-center justify-center py-20 text-[#6B7280]">
+            <div className="flex flex-col items-center justify-center py-20 text-textMuted">
               <Target className="w-16 h-16 mb-4 text-[#D1D5DB]" />
-              <h3 className="text-xl font-medium text-[#374151]">Ready to simulate</h3>
+              <h3 className="text-xl font-medium text-textMain">Ready to simulate</h3>
               <p className="max-w-md text-center mt-2">Adjust your scenario parameters on the left and click "Run Simulation" to see live supply chain telemetry.</p>
             </div>
           ) : (
@@ -269,16 +269,16 @@ function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <MetricCard icon={<DollarSign/>} title="Estimated Revenue" value={`$${liveMetrics.revenue.toLocaleString()}`} color="text-[#059669]" bg="bg-[#ECFDF5]" />
                 <MetricCard icon={<Package/>} title="Active Backlog" value={liveMetrics.backlog.toLocaleString()} color="text-[#D97706]" bg="bg-[#FFFBEB]" />
-                <MetricCard icon={<Activity/>} title="Avg Fill Rate" value={`${liveMetrics.fillRate.toFixed(1)}%`} color="text-[#2563EB]" bg="bg-[#EFF6FF]" />
+                <MetricCard icon={<Activity/>} title="Avg Fill Rate" value={`${liveMetrics.fillRate.toFixed(1)}%`} color="text-primary" bg="bg-[#EFF6FF]" />
                 <MetricCard icon={<ServerCrash/>} title="Stockout Days" value={liveMetrics.stockouts.toString()} color="text-[#DC2626]" bg="bg-[#FEF2F2]" />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Chart */}
-                <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-[#E5E7EB] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-[#E5E7EB] flex justify-between items-center bg-[#F9FAFB]">
-                    <h3 className="font-semibold text-[#111827]">Inventory vs Backlog</h3>
-                    <div className="text-xs font-bold text-[#6B7280] bg-white px-2 py-1 rounded border border-[#D1D5DB]">
+                <div className="lg:col-span-2 bg-surface rounded-xl shadow-sm border border-secondary overflow-hidden">
+                  <div className="px-6 py-4 border-b border-secondary flex justify-between items-center bg-surface">
+                    <h3 className="font-semibold text-textMain">Inventory vs Backlog</h3>
+                    <div className="text-xs font-bold text-textMuted bg-surface px-2 py-1 rounded border border-secondary">
                       Day {currentDay}
                     </div>
                   </div>
@@ -287,12 +287,12 @@ function App() {
                       <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <defs>
                           <linearGradient id="colorInv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#2563EB" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#C15C3D" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#C15C3D" stopOpacity={0}/>
                           </linearGradient>
                           <linearGradient id="colorBacklog" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#DC2626" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#DC2626" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#B23A48" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#B23A48" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
                         <XAxis dataKey="day" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
@@ -301,25 +301,25 @@ function App() {
                         <RechartsTooltip 
                           contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                         />
-                        <Area type="monotone" dataKey="inventory" name="Total Inventory" stroke="#2563EB" strokeWidth={2} fillOpacity={1} fill="url(#colorInv)" isAnimationActive={false} />
-                        <Area type="monotone" dataKey="backlog" name="Backlog Units" stroke="#DC2626" strokeWidth={2} fillOpacity={1} fill="url(#colorBacklog)" isAnimationActive={false} />
+                        <Area type="monotone" dataKey="inventory" name="Total Inventory" stroke="#C15C3D" strokeWidth={2} fillOpacity={1} fill="url(#colorInv)" isAnimationActive={false} />
+                        <Area type="monotone" dataKey="backlog" name="Backlog Units" stroke="#B23A48" strokeWidth={2} fillOpacity={1} fill="url(#colorBacklog)" isAnimationActive={false} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
                 {/* Event Timeline */}
-                <div className="bg-white rounded-xl shadow-sm border border-[#E5E7EB] overflow-hidden flex flex-col h-[465px]">
-                  <div className="px-6 py-4 border-b border-[#E5E7EB] bg-[#F9FAFB]">
-                    <h3 className="font-semibold text-[#111827]">Event Timeline</h3>
+                <div className="bg-surface rounded-xl shadow-sm border border-secondary overflow-hidden flex flex-col h-[465px]">
+                  <div className="px-6 py-4 border-b border-secondary bg-surface">
+                    <h3 className="font-semibold text-textMain">Event Timeline</h3>
                   </div>
                   <div className="flex-1 p-0 overflow-y-auto">
                     {events.length === 0 ? (
-                      <div className="h-full flex items-center justify-center text-sm text-[#9CA3AF]">Waiting for events...</div>
+                      <div className="h-full flex items-center justify-center text-sm text-textMuted">Waiting for events...</div>
                     ) : (
                       <ul className="divide-y divide-[#F3F4F6]">
                         {events.map((ev, idx) => (
-                          <li key={idx} className="p-4 flex gap-4 hover:bg-[#F9FAFB] transition-colors">
+                          <li key={idx} className="p-4 flex gap-4 hover:bg-surface transition-colors">
                             <div className="mt-1">
                               {ev.type === 'error' ? 
                                 <AlertTriangle className="w-5 h-5 text-[#DC2626]" /> : 
@@ -327,8 +327,8 @@ function App() {
                               }
                             </div>
                             <div>
-                              <div className="text-xs font-bold text-[#6B7280] uppercase tracking-wider mb-0.5">Day {ev.day}</div>
-                              <div className="text-sm text-[#374151]">{ev.message}</div>
+                              <div className="text-xs font-bold text-textMuted uppercase tracking-wider mb-0.5">Day {ev.day}</div>
+                              <div className="text-sm text-textMain">{ev.message}</div>
                             </div>
                           </li>
                         ))}
@@ -347,13 +347,13 @@ function App() {
 
 function MetricCard({ icon, title, value, color, bg }: { icon: React.ReactNode, title: string, value: string, color: string, bg: string }) {
   return (
-    <div className="bg-white p-5 rounded-xl border border-[#E5E7EB] shadow-sm flex items-center gap-4">
+    <div className="bg-surface p-5 rounded-xl border border-secondary shadow-sm flex items-center gap-4">
       <div className={`p-3 rounded-lg ${bg} ${color} [&>svg]:w-6 [&>svg]:h-6`}>
         {icon}
       </div>
       <div>
-        <div className="text-xs font-medium text-[#6B7280] uppercase tracking-wider">{title}</div>
-        <div className="text-2xl font-bold text-[#111827] mt-0.5">{value}</div>
+        <div className="text-xs font-medium text-textMuted uppercase tracking-wider">{title}</div>
+        <div className="text-2xl font-bold text-textMain mt-0.5">{value}</div>
       </div>
     </div>
   );

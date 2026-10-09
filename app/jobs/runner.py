@@ -73,6 +73,10 @@ def process_run_job(session: Session, run_id: str):
         "stockout_days": result.metrics.get("stockout_days", 0)
     }
     
+    run.results = {
+        "snapshots": result.snapshots
+    }
+    
     run.status = "succeeded"
     run.completed_at = datetime.now(timezone.utc)
     session.commit()
