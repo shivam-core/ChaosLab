@@ -24,7 +24,7 @@ from app.models.domain import Base
 target_metadata = Base.metadata
 
 def get_url():
-    return os.getenv("DATABASE_URL", "postgresql://chaos:chaos@localhost/chaoslab").replace("postgres://", "postgresql://")
+    return os.getenv("DATABASE_URL", "sqlite:///./chaoslab.db").replace("postgres://", "postgresql://")
 
 
 # other values from the config, defined by the needs of env.py,

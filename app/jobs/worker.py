@@ -15,7 +15,7 @@ from app.jobs.parser import process_parse_job
 from app.jobs.runner import process_run_job
 from app.jobs.pdf import process_pdf_job
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://chaos:chaos@localhost/chaoslab").replace("postgres://", "postgresql://")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./chaoslab.db").replace("postgres://", "postgresql://")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -29,7 +29,7 @@ def claim_job(session) -> Job | None:
     job = session.query(Job).filter(
         (Job.status == "queued") | 
         ((Job.status == "running") & (Job.lease_expiry < now))
-    ).with_for_update(skip_locked=True).first()
+    ).first()
     
     if job:
         job.status = "running"

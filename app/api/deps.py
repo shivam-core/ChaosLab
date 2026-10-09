@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 from app.models.domain import Workspace
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://chaos:chaos@localhost/chaoslab").replace("postgres://", "postgresql://")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./chaoslab.db").replace("postgres://", "postgresql://")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
